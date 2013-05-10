@@ -1,2 +1,3 @@
 .settings/*
 .projects
+node_modules/*
