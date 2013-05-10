@@ -38,5 +38,19 @@ window.onload = function(){
 
 		//Finally, start the loop
 	game.update( new Date().getTime() );
+	
+	
 
 }; //window.onload
+
+jQuery(document).ready(function($) {
+	$('#form-connect').submit(function(e) {
+		e.preventDefault();
+		console.log(JSON.stringify($(this).serializeArray()));
+		console.log(JSON.parse(JSON.stringify($(this).serializeArray()))[0]);
+		game.socket.emit('connect_form', JSON.stringify($(this).serializeArray()));
+	    
+		
+	});
+});
+

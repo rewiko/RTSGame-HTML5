@@ -60,7 +60,7 @@
             //Draw a status update
         game.ctx.fillStyle = this.info_color;
         game.ctx.fillText(this.state, this.pos.x+10, this.pos.y + 4);
-        console.log(this.state,this.pos);
+      //  console.log(this.state,this.pos);
 
 
     

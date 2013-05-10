@@ -115,6 +115,21 @@
             game_server.onMessage(client, m);
 
         }); //client.on message
+        
+        client.on('change_id',function(data){
+        	console.log(data);
+        });
+        
+        client.on('connect_form',function(data){
+        	d=JSON.parse(data);
+        	//login
+        	console.log(d[0].value);
+        	//password
+        	console.log(d[1].value);
+        	
+        });
+        
+        
 
             //When this client disconnects, we want to tell the game server
             //about that as well, so it can remove them from the game they are

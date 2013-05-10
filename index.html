@@ -3,34 +3,132 @@
 	<head>
 
 		<title> Real time multi-player games with HTML5</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Load style sheet -->
+		<link href="assets/css/main.css" media="screen" rel="stylesheet" type="text/css">
+		<link href="assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+		<link href="assets/bootstrap/css/bootstrap-responsive.css" media="screen" rel="stylesheet" type="text/css">
 
-			<!-- Load style sheet -->
-		<link href="index.css" media="screen" rel="stylesheet" type="text/css">
+		<!-- Library code -->
 
-	<!-- Library code -->
-		
-		 	<!-- Load socket.io client side contents. -->
+		<!-- Load socket.io client side contents. -->
 		<script src="/socket.io/socket.io.js"></script>
 
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
+		<!-- Load the GUI rendering library code. -->
+		<script type="text/javascript" src="assets/js/dat.gui.min.js"></script>
+		<!-- Load the keyboard specific code -->
+		<script type="text/javascript" src="assets/js/keyboard.js"></script>
+		<script type="text/javascript" src="assets/js/lib.js"></script>
 
-	 		<!-- Load the GUI rendering library code. -->
-		<script type="text/javascript" src="lib/dat.gui.min.js"></script>
-			<!-- Load the keyboard specific code --> 
-		<script type="text/javascript" src="lib/keyboard.js"></script>
-	 	
-	<!-- Game code -->
+		<!-- Game code -->
 
-	 		<!-- Load the common game code. -->
-	 	<script type="text/javascript" src="player.js"></script>
+		<!-- Load the common game code. -->
+		<script type="text/javascript" src="player.js"></script>
 		<script type="text/javascript" src="game.core.client.js"></script>
-			<!-- Finally, Load the game client code. -->
-		<script type="text/javascript" src="client.js"></script>		
+		<!-- Finally, Load the game client code. -->
+		<script type="text/javascript" src="client.js"></script>
 
 	</head>
 
-	<body>
-		<canvas id="viewport">
-		</canvas>
+	<body class="background fill-body">
+
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="brand" href="#">RTSGame</a>
+					<div class="nav-collapse collapse">
+						<!-- <p class="navbar-text pull-right">
+						Logged in as <a href="#" class="navbar-link">Username</a>
+						</p> -->
+						<!-- <ul class="nav">
+						<li class="active"><a href="#">Home</a></li>
+						<li><a href="#about">About</a></li>
+						<li><a href="#contact">Contact</a></li>
+						</ul> -->
+						<ul class="nav pull-right">
+							<li class="divider-vertical"></li>
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#"> <img width="22" height="22" id=" " class=" " title="anthony.comtois@gmail.com Profile" alt="anthony.comtois@gmail.com" src="http://www.gravatar.com/avatar.php?gravatar_id=bb841318db4f83c11fb3b79bdc4a8db7&amp;default=http://localhost/workspace_aptana/linguasituation/bonfire/themes/default/images/user.png&amp;size=22&amp;border=d6d6d6&amp;rating=PG"> rewiko <b class="caret"></b></a>
+
+								<ul class="dropdown-menu">
+									<form  id="form-connect" action="/" method="POST" class="form-horizontal form-connect">
+										<div class="control-group">
+											<label for="login_connect" class="control-label input-small" >Login:</label>
+											<div class="controls">
+												<input type="text" class="input-small" name="login_connect" value="" placeholder="Votre Login" id="login_connect"/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label for="pwd_connect" class="control-label input-small" >Password:</label>
+											<div class="controls">
+												<input type="password" class="input-small" name="pwd_connect" value="" placeholder="Votre Password" id="pwd_connect"/>
+											</div>
+										</div>
+										<div class="control-group">
+
+											<div class="controls">
+												<button class="btn btn-small btn-primary" type="submit">
+													Connexion
+												</button>
+											</div>
+										</div>
+									</form>
+
+									<!-- <li class="divider"></li>
+									<li>
+									<a href="http://localhost/workspace_aptana/linguasituation/index.php/users/profile"> My Profile </a>
+									</li> -->
+								</ul>
+							</li>
+
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid fill">
+			<div class="row-fluid fill">
+				<div class="span9 fill">
+					<!--Sidebar content-->
+					<canvas id="viewport"></canvas>
+				</div>
+				<div class="span3 fill">
+					<!--Body content-->
+					<div class="col_text well label-info fill">
+						<div class="well well-small">
+							<a data-dismiss="alert" class="well_close close" href="#">&times;</a>
+							<p>
+								teddy: oh you say!
+							</p>
+						</div>
+						<div class="well well-small">
+							<a data-dismiss="alert" class="well_close close" href="#">&times;</a>
+							<p>
+								matt: yes!
+							</p>
+						</div>
+					</div>
+					<textarea class="textarea" name="Name"></textarea>																														
+					
+
+
+				</div>
+			</div>
+
+		</div>
+		<footer class="navbar-fixed-bottom">
+			<p>
+				RTSGame 2013
+			</p>
+		</footer>
 	</body>
 
 </html>

@@ -550,7 +550,7 @@ game_core.prototype.client_onserverupdate_recieved = function(data){
 
     //Store the server time (this is offset by the latency in the network, by the time we get it)
     this.server_time = data.t;
-    console.log("serv.update",data);
+   // console.log("serv.update",data);
     //Update our local offset time from the last server update
     this.client_time = this.server_time - (this.net_offset/1000);
 
@@ -564,7 +564,9 @@ game_core.prototype.client_onserverupdate_recieved = function(data){
     for (var i in data.vals) //loop for all players and set their player id
     {
         if (!this.allplayers[i]) 
-            {this.allplayers[i] = new game_player(this);console.log("created player #"+i);}
+            {this.allplayers[i] = new game_player(this);
+            	//console.log("created player #"+i);
+            	}
         this.allplayers[i].state = "Player #" + i;
         this.allplayers[i].idingame = i;
     }
@@ -677,7 +679,7 @@ game_core.prototype.client_update = function() {
         //When we are doing client side prediction, we smooth out our position
         //across frames using local input states we have stored.
     this.client_update_local_position();
-console.log("p#",this.allplayers);
+//console.log("p#",this.allplayers);
     for(var i in this.allplayers)
     {
         //Now they should have updated, we can draw the entities themselves
@@ -923,6 +925,13 @@ game_core.prototype.client_onconnected = function(data) {
         //The server responded that we are now in a game,
         //this lets us store the information about ourselves and set the colors
         //to show we are now ready to be playing.
+    if(readCookie('id_client')){
+    	console.log(readCookie('id_client'));
+    	this.socket.emit('change_id', { id_client: readCookie('id_client') });
+    }
+    else{
+    	console.log('non identifié');
+    }
     this.selfplayerid = data.id;
     this.selfplayer.info_color = '#cc0000';
     this.selfplayer.state = 'connected';
