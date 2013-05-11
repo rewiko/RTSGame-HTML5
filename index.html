@@ -21,7 +21,7 @@
 		<!-- Load the keyboard specific code -->
 		<script type="text/javascript" src="assets/js/keyboard.js"></script>
 		<script type="text/javascript" src="assets/js/lib.js"></script>
-
+		<script type="text/javascript" src="assets/js/sha256.js"></script>
 		<!-- Game code -->
 
 		<!-- Load the common game code. -->
@@ -58,28 +58,67 @@
 								<a data-toggle="dropdown" class="dropdown-toggle" href="#"> <img width="22" height="22" id=" " class=" " title="anthony.comtois@gmail.com Profile" alt="anthony.comtois@gmail.com" src="http://www.gravatar.com/avatar.php?gravatar_id=bb841318db4f83c11fb3b79bdc4a8db7&amp;default=http://localhost/workspace_aptana/linguasituation/bonfire/themes/default/images/user.png&amp;size=22&amp;border=d6d6d6&amp;rating=PG"> rewiko <b class="caret"></b></a>
 
 								<ul class="dropdown-menu">
-									<form  id="form-connect" action="/" method="POST" class="form-horizontal form-connect">
+									<form  id="form-connect" action="/" method="post" class="form-horizontal form-connect">
 										<div class="control-group">
 											<label for="login_connect" class="control-label input-small" >Login:</label>
 											<div class="controls">
-												<input type="text" class="input-small" name="login_connect" value="" placeholder="Votre Login" id="login_connect"/>
+												<input pattern=".{3,}" title="3 characters minimum" type="text" class="input-size" name="data[login][login_connect]" value="" placeholder="Pseudo" id="login_connect" required/>
 											</div>
 										</div>
 										<div class="control-group">
 											<label for="pwd_connect" class="control-label input-small" >Password:</label>
 											<div class="controls">
-												<input type="password" class="input-small" name="pwd_connect" value="" placeholder="Votre Password" id="pwd_connect"/>
+												<input type="password" class="input-size" name="data[login][pwd_connect]" value="" placeholder="Password" id="pwd_connect" required/>
 											</div>
 										</div>
 										<div class="control-group">
-											
-												<button class="button-connect btn btn-small btn-info pull-left" type="submit">
-													S'enregistrer
-												</button>
-											
+
+											<button class="button-connect-left btn btn-small btn-info pull-left" id="register_button" type="submit">
+												S'enregistrer
+											</button>
+
 											<div class="controls">
 												<button class="button-connect btn btn-small btn-primary" type="submit">
 													Connexion
+												</button>
+											</div>
+										</div>
+									</form>
+
+									<form  id="form-register" action="/" method="post" class="form-horizontal form-connect hide">
+										<div class="control-group">
+											<label for="login_register" class="control-label input-small" >Login:</label>
+											<div class="controls">
+												<input type="text" class="input-size" name="data[register][login_register]" value="" placeholder="Pseudo" id="login_register" required/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label for="pwd_register" class="control-label input-small" >Password:</label>
+											<div class="controls">
+												<input pattern=".{5,}" title="5 characters minimum" type="password" class="input-size" name="data[register][pwd_register]" value="" placeholder="Password" id="pwd_register" required/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label for="pwd_register_again" class="control-label input-small" >Password Again:</label>
+											<div class="controls">
+												<input pattern=".{5,}" title="5 characters minimum" type="password" class="input-size" name="data[register][pwd_register_again]" value="" placeholder="Password" id="pwd_register_again" required/>
+											</div>
+										</div>
+										<div class="control-group">
+											<label for="email_register" class="control-label input-small" >Email:</label>
+											<div class="controls">
+												<input type="email" class="input-size" name="data[register][email_register]" value="" placeholder="mail@domain.com" id="email_register" required/>
+											</div>
+										</div>
+										<div class="control-group">
+
+											<button class=" btn btn-small btn-info pull-left" id="connect_button" type="submit">
+												Connexion
+											</button>
+
+											<div class="controls">
+												<button class="button-connect btn btn-small btn-primary" type="submit">
+													S'enregistrer
 												</button>
 											</div>
 										</div>
@@ -120,8 +159,9 @@
 							</p>
 						</div>
 					</div>
-					<textarea class="textarea" name="Name"></textarea>																														
+					<textarea class="textarea" name="Name"></textarea>																																			
 					
+
 
 
 				</div>

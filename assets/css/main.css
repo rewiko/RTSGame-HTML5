@@ -59,3 +59,22 @@ body {
 .button-connect{
 margin-left: 10px;
 }
+
+#register_button{
+	margin-left: 28px;
+}
+#connect_button{
+	margin-left: 33px;
+}
+
+.hide{
+	display : none;
+}
+
+.input-size{
+	width: 115px;
+}
+
+textarea { 
+    resize: none; 
+}

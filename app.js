@@ -24,6 +24,13 @@
 
         verbose         = false,
         app             = express.createServer();
+        
+        var pg = require("pg");
+
+		var conString = "pg://root:root@localhost:5432/rtsgame";
+		
+		var client_bdd = new pg.Client(conString);
+		client_bdd.connect();
 
 /* Express server set up. */
 
@@ -129,6 +136,23 @@
         	
         });
         
+        client.on('register',function(data){
+        	d=JSON.parse(data);
+        	//login
+        	login=d[0].value;
+        	//email
+        	email=d[3].value;
+        	//second hash password sha256 + salt
+        	var SHA256 = require("crypto-js/sha256");
+        	password_hash=SHA256(d[1].value+"HijzOKd").toString();
+        	//create 2 UUID 
+        	console.log(UUID());
+        	console.log(UUID());
+        	
+        	
+        	// insert into BDD
+        	
+        });
         
 
             //When this client disconnects, we want to tell the game server
