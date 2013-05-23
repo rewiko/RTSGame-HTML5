@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel>
+<schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<database name="rtsgame" encoding="UTF8">
+</database>
+
+<table name="role" oids="true">
+	<schema name="public"/>
+	<position x="20" y="22"/>
+	<column name="id_role" not-null="true">
+		<type name="serial"/>
+		<comment><![CDATA[id_roles]]></comment>
+	</column>
+	<column name="name_role" default-value="NULL">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="description_role">
+		<type name="varchar" length="500"/>
+	</column>
+	<constraint name="pk_id_role" type="pk-constr" factor="10" table="public.role">
+		<columns names="id_role" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="user_rts" oids="true">
+	<schema name="public"/>
+	<position x="780" y="0"/>
+	<column name="id_user" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="uuid_user" not-null="true">
+		<type name="uuid" length="50"/>
+	</column>
+	<column name="login_user" not-null="true">
+		<type name="varchar" length="150"/>
+	</column>
+	<column name="pwd_user" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="salt_user" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="email_user" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="created_on" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="banned" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<constraint name="pk_id_user" type="pk-constr" factor="10" table="public.user_rts">
+		<columns names="id_user" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="unique_uuid" type="uq-constr" factor="10" table="public.user_rts">
+		<columns names="uuid_user" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="unique_login" type="uq-constr" factor="10" table="public.user_rts">
+		<columns names="login_user" ref-type="src-columns"/>
+	</constraint>
+	<index name="uuid_index" table="public.user_rts"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="uuid_user"/>
+		</idxelement>
+	</index>
+	<index name="index_login" table="public.user_rts"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="login_user"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="role_link" oids="true">
+	<schema name="public"/>
+	<position x="420" y="20"/>
+	<column name="fk_id_role" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="fk_id_role_user" not-null="true">
+		<type name="integer"/>
+	</column>
+	<constraint name="fk_id_role_user" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.user_rts" table="public.role_link">
+		<columns names="fk_id_role_user" ref-type="src-columns"/>
+		<columns names="id_user" ref-type="dst-columns"/>
+	</constraint>
+	<constraint name="pk_role_link" type="pk-constr" factor="10" table="public.role_link">
+		<columns names="fk_id_role,fk_id_role_user" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="fk_id_role" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.role" table="public.role_link">
+		<columns names="fk_id_role" ref-type="src-columns"/>
+		<columns names="id_role" ref-type="dst-columns"/>
+	</constraint>
+</table>
+
+<relationship name="rel_roles_link_users_rtsgame"
+	 type="relfk"
+	 src-table="public.role_link"
+	 dst-table="public.user_rts"
+	 src-required="false" dst-required="false"
+/>
+
+<relationship name="rel_roles_link_roles"
+	 type="relfk"
+	 src-table="public.role_link"
+	 dst-table="public.role"
+	 src-required="false" dst-required="false"
+/>
+
+<table name="game_rts" oids="true">
+	<schema name="public"/>
+	<position x="200" y="140"/>
+	<column name="id_game" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="created_on" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<constraint name="pk_id_game" type="pk-constr" factor="10" table="public.game_rts">
+		<columns names="id_game" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="in_game" oids="true">
+	<schema name="public"/>
+	<position x="500" y="140"/>
+	<column name="fk_id_game" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="fk_id_user" not-null="true">
+		<type name="integer"/>
+	</column>
+	<constraint name="pk_in_game" type="pk-constr" factor="10" table="public.in_game">
+		<columns names="fk_id_game,fk_id_user" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="fk_id_user" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.user_rts" table="public.in_game">
+		<columns names="fk_id_user" ref-type="src-columns"/>
+		<columns names="id_user" ref-type="dst-columns"/>
+	</constraint>
+	<constraint name="fk_id_game" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.game_rts" table="public.in_game">
+		<columns names="fk_id_game" ref-type="src-columns"/>
+		<columns names="id_game" ref-type="dst-columns"/>
+	</constraint>
+</table>
+
+<relationship name="rel_in_game_user_rts"
+	 type="relfk"
+	 src-table="public.in_game"
+	 dst-table="public.user_rts"
+	 src-required="false" dst-required="false"
+/>
+
+<relationship name="rel_in_game_game_rts"
+	 type="relfk"
+	 src-table="public.in_game"
+	 dst-table="public.game_rts"
+	 src-required="false" dst-required="false"
+/>
+
+</dbmodel>

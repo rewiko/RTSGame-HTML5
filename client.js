@@ -43,11 +43,15 @@ window.onload = function() {
 //window.onload
 
 jQuery(document).ready(function($) {
+
 	$('#form-connect').submit(function(e) {
 		e.preventDefault();
-		console.log(JSON.stringify($(this).serializeArray()));
-		console.log(JSON.parse(JSON.stringify($(this).serializeArray()))[0]);
-		game.socket.emit('connect_form', JSON.stringify($(this).serializeArray()));
+
+		data = $(this).serializeArray();
+		// hash des pwd avant passage sur le reseau
+		data[1].value = CryptoJS.SHA256(data[1].value).toString(CryptoJS.enc.Hex);
+
+		game.socket.emit('connect_form', JSON.stringify(data));
 
 	});
 
@@ -66,7 +70,7 @@ jQuery(document).ready(function($) {
 
 	$('#form-register').submit(function(e) {
 		e.preventDefault();
-		
+
 		data = $(this).serializeArray();
 		//test pwd egaux
 		if (data[1].value == data[2].value) {
@@ -74,8 +78,7 @@ jQuery(document).ready(function($) {
 			data[1].value = CryptoJS.SHA256(data[1].value).toString(CryptoJS.enc.Hex);
 			data[2].value = CryptoJS.SHA256(data[2].value).toString(CryptoJS.enc.Hex);
 			game.socket.emit('register', JSON.stringify(data));
-		}
-		else{
+		} else {
 			console.log('bad password');
 		}
 	});
