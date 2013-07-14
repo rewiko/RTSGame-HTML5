@@ -43,6 +43,13 @@ window.onload = function() {
 //window.onload
 
 jQuery(document).ready(function($) {
+	//anti-bot change input
+	document.onmousemove = change_bot_input;
+	function change_bot_input(){
+		$('#send_hidden').val('');
+	}
+	
+
 
 	$('#form-connect').submit(function(e) {
 		e.preventDefault();

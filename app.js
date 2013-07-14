@@ -30,7 +30,18 @@
 		var conString = "pg://root:root@localhost:5432/rtsgame";
 		
 		var client_bdd = new pg.Client(conString);
-		client_bdd.connect();
+		
+		//note: error handling omitted
+
+		client_bdd.connect(function(err) {
+		  client_bdd.query('SELECT NOW() AS "theTime"', function(err, result) {
+		  	if(err)
+		  		console.log("erreur BDD",err);
+		  	else 
+		    	console.log("launch BDD",result.rows[0].theTime);
+		      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+		  })
+		});
 
 /* Express server set up. */
 
@@ -138,20 +149,26 @@
         
         client.on('register',function(data){
         	d=JSON.parse(data);
+        	
         	//login
         	login=d[0].value;
         	//email
         	email=d[3].value;
-        	//second hash password sha256 + salt
-        	var SHA256 = require("crypto-js/sha256");
-        	password_hash=SHA256(d[1].value+"HijzOKd").toString();
-        	//create 2 UUID 
-        	console.log(UUID());
-        	console.log(UUID());
-        	
-        	
-        	// insert into BDD
-        	
+        	//anti_bot
+        	if(d[4].value==""){
+        		//second hash password sha256 + salt
+	        	var SHA256 = require("crypto-js/sha256");
+	        	salt=Math.random().toString(36).substring(10);
+	        	password_hash=SHA256(d[1].value+salt).toString();
+	        
+	        	// insert into BDD
+	        	 client_bdd.query('INSERT INTO user_rts VALUES (default,$1,$2,$3,$4,$5,NOW(),default)', [UUID(),login,password_hash,salt,email], function(err, result) {
+	     		 	console.log(err);
+	     		 	console.log(result);
+			     //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+				 });
+		   }
+		        	
         });
         
 
