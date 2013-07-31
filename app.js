@@ -42,6 +42,11 @@
 		      //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
 		  })
 		});
+		
+		var SHA256 = require("crypto-js/sha256");
+		
+		var mailer = require("./mailer.js");
+		var log_rts = require("./log.js");
 
 /* Express server set up. */
 
@@ -52,6 +57,11 @@
 
         //Tell the server to listen for incoming connections
     app.listen( gameport );
+    var remote_addr="";
+    //use session
+     store  = new express.session.MemoryStore;
+app.use(express.cookieParser());
+app.use(express.session({ secret: 'something', store: store }));
 
         //Log something so we know that it succeeded.
     console.log('\t :: Express :: Listening on port ' + gameport );
@@ -59,6 +69,8 @@
         //By default, we forward the / path to index.html automatically.
     app.get( '/', function( req, res ){
         res.sendfile( __dirname + '/index.html' );
+        req.session.remoteAddress = req.connection.remoteAddress;
+		remote_addr=req.session.remoteAddress;
     });
 
 
@@ -72,7 +84,11 @@
 
             //For debugging, we can track what files are requested.
         if(verbose) console.log('\t :: Express :: file requested : ' + file);
-
+		console.log('IP: ' + req.connection.remoteAddress + '!');
+		
+	req.session.remoteAddress = req.connection.remoteAddress;
+	remote_addr=req.session.remoteAddress;
+		
             //Send the requesting client the file.
         res.sendfile( __dirname + '/' + file );
 
@@ -114,7 +130,11 @@
             //5b2ca132-64bd-4513-99da-90e838ca47d1
             //and store this on their socket/connection
         client.userid = UUID();
-
+        // console.log(client.remoteAddress);
+        // var endpoint = client.address();
+    // console.log('Client connected from: ' + endpoint.address + ":" + endpoint.port);
+		 // var remote_addr=client.remoteAddress;
+		 // console.log("remote",remote_addr);
             //tell the player they connected, giving them their id
         client.emit('onconnected', { id: client.userid } );
 
@@ -136,35 +156,110 @@
         
         client.on('change_id',function(data){
         	console.log(data);
+        	
+        	
+        	
+        	
+        	client_bdd.query('SELECT uuid_user,salt_user,pwd_user  from user_rts where login_user=$1',[data.user], function(err, result) {
+        		
+        		// verrif password pwd =d[1].value 
+        		if(!err&& result.rowCount>0){
+        			console.log('ip',client.manager.handshaken[client.id].address.address);
+	        		if(SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString()==data.id_reco){
+	        			console.log("bonne connexion ");
+	        			console.log(data.user,result.rows[0].uuid_user);
+	        			 client.emit('onconnected', { id_reco: SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString(), user:data.user,change_id:1} );
+	        		}
+	        		else {
+	        			console.log("bad connexion ");
+	        			client.emit('onconnected', { id: "unknown" , user:data.user,change_id:1} );
+	        		}
+        			 
+        		}
+        		else {
+	        			console.log("bad connexion ");
+	        			client.emit('onconnected', { id: "unknown" , user:data.user,change_id:1} );
+	        	}
+        		
+        		 
+        	});
+        	
         });
         
         client.on('connect_form',function(data){
         	d=JSON.parse(data);
-        	//login
-        	console.log(d[0].value);
-        	//password
-        	console.log(d[1].value);
+        	console.log('connect login ',client.manager.handshaken[client.id].address.address);
+        	login=d[0].value;
+        	client_bdd.query('SELECT uuid_user,salt_user,pwd_user  from user_rts where login_user=$1',[login], function(err, result) {
+        		
+        		// verrif password pwd =d[1].value 
+        		if(!err&& result.rowCount>0){
+        			
+	        		if(result.rows[0].pwd_user==SHA256(d[1].value+ result.rows[0].salt_user).toString()){
+	        			console.log("bonne connexion ");
+	        			 client.emit('onconnected', { id_reco: SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString(), user:d[0].value,change_id:0} );
+			        	uuid_user=result.rows[0].uuid_user;
+			        		 	// insert into BDD
+	     		 	if(!err){
+	     		 		//mise en place log 
+	     		 		var log_write = new log_rts(client_bdd);
+			     		log_write.log_user(client,login);
+			      	}
+		        		  		 
+		        	
+        		
+	        			 
+	        			 
+	        		}
+	        		else {
+	        			console.log("bad connexion ");
+	        			client.emit('onconnected', { id: "unknown", user:d[0].value ,change_id:0} );
+	        		}
+        			 
+        		}
+        		else {
+	        			console.log("bad connexion ");
+	        			client.emit('onconnected', { id: "unknown", user:d[0].value,change_id:0 } );
+	        	}
+        		
+        		 
+        	});
         	
         });
         
         client.on('register',function(data){
         	d=JSON.parse(data);
-        	
+        		console.log('connect register ',client.manager.handshaken[client.id].address.address);
         	//login
         	login=d[0].value;
         	//email
         	email=d[3].value;
         	//anti_bot
+        	console.log("register ip :" ,client.manager.handshaken[client.id].address.address);
         	if(d[4].value==""){
         		//second hash password sha256 + salt
-	        	var SHA256 = require("crypto-js/sha256");
 	        	salt=Math.random().toString(36).substring(10);
 	        	password_hash=SHA256(d[1].value+salt).toString();
-	        
+	        	uuid_user=UUID();
 	        	// insert into BDD
-	        	 client_bdd.query('INSERT INTO user_rts VALUES (default,$1,$2,$3,$4,$5,NOW(),default)', [UUID(),login,password_hash,salt,email], function(err, result) {
-	     		 	console.log(err);
-	     		 	console.log(result);
+	        	 client_bdd.query('INSERT INTO user_rts VALUES (default,$1,$2,$3,$4,$5,NOW(),default)', [uuid_user,login,password_hash,salt,email], function(err, result) {
+	     		 	console.log("err :",err);
+	     		 	console.log("result :",result);
+	     		 	console.log("bonne connexion ");
+	        		client.emit('onconnected', { id_reco: SHA256(uuid_user+ client.manager.handshaken[client.id].address.address+password_hash).toString(), user:login,change_id:1} );
+	     		 	// insert into BDD
+	     		 	if(!err){
+			     		//mise en place log 
+	     		 		var log_write = new log_rts(client_bdd);
+			     		log_write.log_user(client,login);
+	        		}
+        		
+        		//send mail register activation compte 
+        		 var send_mail = new mailer();
+        		 send_mail.send();
+        		
+			        	
+	     		 	//emit si err ou result et mail de confirmation 
 			     //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
 				 });
 		   }

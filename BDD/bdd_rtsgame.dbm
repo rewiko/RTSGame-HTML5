@@ -7,7 +7,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<database name="rtsgame" encoding="UTF8">
+<database name="rtsgame" encoding="UTF8" sql-disabled="true">
 </database>
 
 <table name="role" oids="true">
@@ -50,7 +50,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="varchar" length="255"/>
 	</column>
 	<column name="created_on" not-null="true">
-		<type name="timestamp"/>
+		<type name="timestamp" with-timezone="true"/>
 	</column>
 	<column name="banned" not-null="true" default-value="false">
 		<type name="boolean"/>
@@ -104,19 +104,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<relationship name="rel_roles_link_users_rtsgame"
-	 type="relfk"
+<relationship name="rel_roles_link_users_rtsgame" type="relfk"
 	 src-table="public.role_link"
 	 dst-table="public.user_rts"
-	 src-required="false" dst-required="false"
-/>
+	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_roles_link_roles"
-	 type="relfk"
+<relationship name="rel_roles_link_roles" type="relfk"
 	 src-table="public.role_link"
 	 dst-table="public.role"
-	 src-required="false" dst-required="false"
-/>
+	 src-required="false" dst-required="false"/>
 
 <table name="game_rts" oids="true">
 	<schema name="public"/>
@@ -156,18 +152,44 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<relationship name="rel_in_game_user_rts"
-	 type="relfk"
+<relationship name="rel_in_game_user_rts" type="relfk"
 	 src-table="public.in_game"
 	 dst-table="public.user_rts"
-	 src-required="false" dst-required="false"
-/>
+	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_in_game_game_rts"
-	 type="relfk"
+<relationship name="rel_in_game_game_rts" type="relfk"
 	 src-table="public.in_game"
 	 dst-table="public.game_rts"
-	 src-required="false" dst-required="false"
-/>
+	 src-required="false" dst-required="false"/>
 
+<table name="connexion_rts" oids="false">
+	<schema name="public"/>
+	<position x="1193" y="48"/>
+	<column name="id_connexion">
+		<type name="serial"/>
+	</column>
+	<column name="connected_at">
+		<type name="timestamp" with-timezone="true"/>
+	</column>
+	<column name="ip_connected" not-null="true">
+		<type name="inet"/>
+	</column>
+	<constraint name="pk_id_connexion" type="pk-constr" factor="10" table="public.connexion_rts">
+		<columns names="id_connexion" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="user_rts_has_many_connexion_rts" type="rel1n"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 col-indexes="3" constr-indexes="1"
+	 src-table="public.user_rts"
+	 dst-table="public.connexion_rts"
+	 src-required="false" dst-required="false"/>
+
+<permission>
+	<object name="rtsgame" type="database"/>
+	<privileges create="true" connect="true" temporary="true"/>
+</permission>
 </dbmodel>

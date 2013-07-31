@@ -925,12 +925,17 @@ game_core.prototype.client_onconnected = function(data) {
         //The server responded that we are now in a game,
         //this lets us store the information about ourselves and set the colors
         //to show we are now ready to be playing.
-    if(readCookie('id_client')){
-    	console.log(readCookie('id_client'));
-    	this.socket.emit('change_id', { id_client: readCookie('id_client') });
+       
+    if(readCookie('id_reco')&&readCookie('user')&& readCookie('id_reco')!="unknown"&&readCookie('id_reco')!="undefined"&&(!data.change_id || typeof(data.change_id)=="undefined")){
+    	console.log("reconnexion :")
+    	
+    	this.socket.emit('change_id', { id_reco: readCookie('id_reco') , user:readCookie('user')});
     }
     else{
-    	console.log('non identifié');
+    	
+    	createCookie("id_reco",data.id_reco,360);
+    	createCookie("user",data.user,360);
+    	
     }
     this.selfplayerid = data.id;
     this.selfplayer.info_color = '#cc0000';
