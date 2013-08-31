@@ -158,17 +158,23 @@ app.use(express.session({ secret: 'something', store: store }));
         	console.log(data);
         	
         	
-        	
-        	
+        	login=data.user;
+        	console.log("login est : ",data.user);
         	client_bdd.query('SELECT uuid_user,salt_user,pwd_user  from user_rts where login_user=$1',[data.user], function(err, result) {
         		
         		// verrif password pwd =d[1].value 
         		if(!err&& result.rowCount>0){
         			console.log('ip',client.manager.handshaken[client.id].address.address);
 	        		if(SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString()==data.id_reco){
-	        			console.log("bonne connexion ");
+	        			log("bonne connexion ok");
 	        			console.log(data.user,result.rows[0].uuid_user);
 	        			 client.emit('onconnected', { id_reco: SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString(), user:data.user,change_id:1} );
+	        			 
+	     		 		//mise en place log 
+	     		 		var log_write = new log_rts(client_bdd);
+			     		log_write.log_user(client,login);
+			      		
+		        		  	
 	        		}
 	        		else {
 	        			console.log("bad connexion ");

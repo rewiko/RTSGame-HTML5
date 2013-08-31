@@ -24,7 +24,7 @@
 		        			client_bdd.query('INSERT INTO connexion_rts VALUES (default,NOW(),$1,$2)', [client.manager.handshaken[client.id].address.address,id_user], function(err, result) {
 				     		 	console.log("err :",err);
 				     		 	console.log("result :",result);
-				     		 	console.log("inscritpion log ",client.manager.handshaken[client.id].address.address,uuid_user);
+				     		 	console.log("inscritpion log ",client.manager.handshaken[client.id].address.address,id_user);
 			     		 	
 			     		 		//emit si err ou result et mail de confirmation 
 					    	 	//output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)

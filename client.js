@@ -44,24 +44,24 @@ window.onload = function() {
 
 jQuery(document).ready(function($) {
 	
-	// empecher fermeture de la page 
-	var confirmOnLeave = function(msg) {
- 
-	    window.onbeforeunload = function (e) {
-	        e = e || window.event;
-	        msg = msg || '';
-	 
-	        // For IE and Firefox
-	        if (e) {e.returnValue = msg;}
-	 
-	        // For Chrome and Safari
-	        return msg;
-	    };
- 
-	};
-	 
-	// message de confirmation générique du navigateur
-	confirmOnLeave();
+	// // empecher fermeture de la page 
+	// var confirmOnLeave = function(msg) {
+//  
+	    // window.onbeforeunload = function (e) {
+	        // e = e || window.event;
+	        // msg = msg || '';
+// 	 
+	        // // For IE and Firefox
+	        // if (e) {e.returnValue = msg;}
+// 	 
+	        // // For Chrome and Safari
+	        // return msg;
+	    // };
+//  
+	// };
+// 	 
+	// // message de confirmation générique du navigateur
+	// confirmOnLeave();
 	 
 	// message de confirmation personnalisé
 	//confirmOnLeave('Vous allez perdre votre travail, êtes vous sûr(e) de vouloir quitter la page ?');
