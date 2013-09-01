@@ -43,7 +43,9 @@
 		  })
 		});
 		
+
 		var SHA256 = require("crypto-js/sha256");
+		var md5 = require("crypto-js/md5");
 		
 		var mailer = require("./mailer.js");
 		var log_rts = require("./log.js");
@@ -160,15 +162,18 @@ app.use(express.session({ secret: 'something', store: store }));
         	
         	login=data.user;
         	console.log("login est : ",data.user);
-        	client_bdd.query('SELECT uuid_user,salt_user,pwd_user  from user_rts where login_user=$1',[data.user], function(err, result) {
+        	client_bdd.query('SELECT uuid_user,salt_user,pwd_user,email_user  from user_rts where login_user=$1',[data.user], function(err, result) {
         		
         		// verrif password pwd =d[1].value 
         		if(!err&& result.rowCount>0){
         			console.log('ip',client.manager.handshaken[client.id].address.address);
 	        		if(SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString()==data.id_reco){
-	        			log("bonne connexion ok");
+	        			console.log("bonne connexion ok");
 	        			console.log(data.user,result.rows[0].uuid_user);
-	        			 client.emit('onconnected', { id_reco: SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString(), user:data.user,change_id:1} );
+	        			
+	        			//create gravatar 
+	        			var_gravatar="http://www.gravatar.com/avatar/"+md5(result.rows[0].email_user)+"?s=22";
+	        			 client.emit('onconnected', { id_reco: SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString(), user:data.user,change_id:1,connect:2,gravatar:var_gravatar} );
 	        			 
 	     		 		//mise en place log 
 	     		 		var log_write = new log_rts(client_bdd);
@@ -196,14 +201,17 @@ app.use(express.session({ secret: 'something', store: store }));
         	d=JSON.parse(data);
         	console.log('connect login ',client.manager.handshaken[client.id].address.address);
         	login=d[0].value;
-        	client_bdd.query('SELECT uuid_user,salt_user,pwd_user  from user_rts where login_user=$1',[login], function(err, result) {
+        	client_bdd.query('SELECT uuid_user,salt_user,pwd_user,email_user  from user_rts where login_user=$1',[login], function(err, result) {
         		
         		// verrif password pwd =d[1].value 
         		if(!err&& result.rowCount>0){
         			
 	        		if(result.rows[0].pwd_user==SHA256(d[1].value+ result.rows[0].salt_user).toString()){
 	        			console.log("bonne connexion ");
-	        			 client.emit('onconnected', { id_reco: SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString(), user:d[0].value,change_id:0} );
+	        			
+	        			//create gravatar 
+	        			var_gravatar="http://www.gravatar.com/avatar/"+md5(result.rows[0].email_user)+"?s=22";
+	        			 client.emit('onconnected', { id_reco: SHA256(result.rows[0].uuid_user+ client.manager.handshaken[client.id].address.address+result.rows[0].pwd_user).toString(), user:d[0].value,change_id:0,connect:1,gravatar:var_gravatar} );
 			        	uuid_user=result.rows[0].uuid_user;
 			        		 	// insert into BDD
 	     		 	if(!err){
@@ -252,7 +260,7 @@ app.use(express.session({ secret: 'something', store: store }));
 	     		 	console.log("err :",err);
 	     		 	console.log("result :",result);
 	     		 	console.log("bonne connexion ");
-	        		client.emit('onconnected', { id_reco: SHA256(uuid_user+ client.manager.handshaken[client.id].address.address+password_hash).toString(), user:login,change_id:1} );
+	        		client.emit('onconnected', { id_reco: SHA256(uuid_user+ client.manager.handshaken[client.id].address.address+password_hash).toString(), user:login,change_id:1,connect:0} );
 	     		 	// insert into BDD
 	     		 	if(!err){
 			     		//mise en place log 

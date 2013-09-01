@@ -60,12 +60,17 @@ body {
 margin-left: 10px;
 }
 
+
 #register_button{
 	margin-left: 21px;
 }
 #connect_button{
 	margin-left: 33px;
 }
+#connect_button_show{
+	margin-left: 41px;
+}
+
 
 .dropdown-menu{
 	padding-right: 10px;
@@ -81,4 +86,25 @@ margin-left: 10px;
 
 textarea { 
     resize: none; 
+}
+
+
+/* loader */	
+.loader{
+	display: block;
+	margin: auto;
+	margin-top: 50%;
+	margin-bottom: 50%;
+}
+.red-color{
+	color:red;
+}
+
+.center{
+	display: block;
+	margin: auto;
+}
+
+.center-text{
+	text-align: center;
 }

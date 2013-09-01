@@ -80,11 +80,15 @@ jQuery(document).ready(function($) {
 
 	$('#form-connect').submit(function(e) {
 		e.preventDefault();
+		eraseCookie("id_reco");
+		eraseCookie("user");
 
 		data = $(this).serializeArray();
 		// hash des pwd avant passage sur le reseau
 		data[1].value = CryptoJS.SHA256(data[1].value).toString(CryptoJS.enc.Hex);
-
+		$('#form-connect').hide();
+		$('#loading').show();
+			
 		game.socket.emit('connect_form', JSON.stringify(data));
 
 	});
@@ -101,20 +105,42 @@ jQuery(document).ready(function($) {
 		$('#form-connect').fadeIn(1000);
 
 	});
+	//button after register 
+	$('#connect_button_show').click(function(e) {
+		e.preventDefault();
+		$('#end_register').hide();
+		$('#form-connect').show();
+	});
+	
+	$('#logout-button').click(function(e) {
+		e.preventDefault();
+		eraseCookie("id_reco");
+		eraseCookie("user");
+		window.location.href="/";
+	});
 
 	$('#form-register').submit(function(e) {
 		e.preventDefault();
-
+		eraseCookie("id_reco");
+		eraseCookie("user");
 		data = $(this).serializeArray();
 		//test pwd egaux
 		if (data[1].value == data[2].value) {
+			$("#pwd_notif").hide();
 			// hash des pwd avant passage sur le reseau
 			data[1].value = CryptoJS.SHA256(data[1].value).toString(CryptoJS.enc.Hex);
 			data[2].value = CryptoJS.SHA256(data[2].value).toString(CryptoJS.enc.Hex);
 			game.socket.emit('register', JSON.stringify(data));
+			$('#form-register').hide();
+			$('#loading').show();
+			
+			
 		} else {
-			console.log('bad password');
+			$("#pwd_notif").html('<p class="center-text red-color">Password not the same!');
+			$("#pwd_notif").show();
 		}
 	});
+	
+	
 });
 

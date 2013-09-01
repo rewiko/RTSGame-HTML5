@@ -1,0 +1,11 @@
+
+-- connexion
+- activation boolean suite au mail génération mail 
+- erreur inscription afficahge utilisateur 
+- régénération password
+
+-- mise en place chat et jeux avec backboneio
+- création chatroom + session jeu
+- inscription de tout en BDD joueur en ligne, partie .. 
+ 
+ 

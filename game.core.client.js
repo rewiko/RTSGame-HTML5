@@ -931,12 +931,34 @@ game_core.prototype.client_onconnected = function(data) {
     	
     	this.socket.emit('change_id', { id_reco: readCookie('id_reco') , user:readCookie('user')});
     }
-    else{
+    // login or relogin
+    else if (data.connect==1||data.connect==2){
     	
     	createCookie("id_reco",data.id_reco,360);
     	createCookie("user",data.user,360);
+    	$('#loading').hide();
+    	if(data.connect==1){
+    		$('#dropdown-connect').click();
+    	}
+    	
+    	// mise en place lien deconnexion + changement pseudo 
+    	$('#form-connect').hide();
+    	$('.connected-button-drop').show(); 
+    		
+    		
+    	$('#dropdown-connect').html('<img width="22" height="22" id=" " class=" " title="'+readCookie('user')+'" alt="'+readCookie('user')+'" src="'+data.gravatar+'"> '+readCookie('user')+' <b class="caret"></b>');
+								
+    	
     	
     }
+    else if (data.connect==0) {
+    	//register ok 
+    	$('#loading').hide();
+    	$('#end_register').show();
+    	
+    	
+    }
+   
     this.selfplayerid = data.id;
     this.selfplayer.info_color = '#cc0000';
     this.selfplayer.state = 'connected';
