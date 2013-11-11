@@ -27,7 +27,7 @@
         
         var pg = require("pg");
 
-		var conString = "pg://root:root@localhost:5432/rtsgame";
+		var conString = "pg://postgres:postgres@localhost:5432/rtsgame";
 		
 		var client_bdd = new pg.Client(conString);
 		
